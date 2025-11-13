@@ -1,32 +1,142 @@
-<!doctype html>
-<html class="no-js" lang="">
-
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="">
+  <meta charset="UTF-8">
+  <title> Menu </title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f7f3ef;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;  /* центр по горизонтали */
+      align-items: center;      /* центр по вертикали */
+    }
 
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
+    .menu {
+      background: #fff;
+      padding: 40px 60px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
 
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.png">
+    .menu-title {
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #5a3825;
+      font-weight: 600;
+    }
 
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#fafafa">
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-list > li {
+      font-size: 22px;
+      color: #5a3825;
+      margin: 15px 0;
+      cursor: pointer;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .menu-list > li:hover {
+      color: #a67c52;
+    }
+
+    /* Подкатегории (скрыты по умолчанию) */
+    .submenu {
+      display: none;
+      margin-top: 10px;
+      list-style: none;
+      padding: 0;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .submenu li {
+      font-size: 18px;
+      margin: 8px 0;
+      color: #6b4c32;
+      transition: 0.3s;
+    }
+
+    .submenu li:hover {
+      color: #a67c52;
+    }
+
+    /* Активное состояние */
+    .menu-list li.active .submenu {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<p>Abdul loh</p>
+<div class="menu">
+  <div class="menu-title"> Меню  кофейни </div>
+  <ul class="menu-list">
 
-  <script src="js/app.js"></script>
+    <li id="coffee">Кофе
+      <ul class="submenu">
+        <li>Капучино — 180⃀</li>
+        <li>Латте — 180⃀</li>
+
+      </ul>
+    </li>
+
+    <li id="tea">Чай
+      <ul class="submenu">
+        <li>Черный — 100⃀</li>
+        <li>Зеленый — 100⃀</li>
+
+      </ul>
+    </li>
+
+    <li id="desserts">Десерты
+      <ul class="submenu">
+        <li>Чизкейк — 220⃀ </li>
+        <li>Тирамису — 240⃀</li>
+      </ul>
+    </li>
+
+  </ul>
+</div>
+
+<script>
+  const items = document.querySelectorAll('.menu-list > li');
+
+  items.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Закрыть другие категории
+      items.forEach(i => {
+        if (i !== item) i.classList.remove('active');
+      });
+      // Переключить выбранную
+      item.classList.toggle('active');
+    });
+  });
+
+  // Закрыть все, если клик вне меню
+  document.addEventListener('click', () => {
+    items.forEach(i => i.classList.remove('active'));
+  });
+</script>
+
 </body>
-
 </html>
