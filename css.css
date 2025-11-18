@@ -1,28 +1,36 @@
+/* --- Сброс и общие настройки --- */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f7f3ef;
+  background: #f7f3ef; /* Мягкий фон кофейни */
   margin: 0;
-  height: 100vh;
+  min-height: 100vh; /* Используем min-height для лучшего центрирования */
   display: flex;
-  justify-content: center;  /* центр по горизонтали */
-  align-items: center;      /* центр по вертикали */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
+/* --- Основной контейнер меню --- */
 .menu {
   background: #fff;
   padding: 40px 60px;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15); /* Более выраженная тень */
   text-align: center;
+  width: 100%;
+  max-width: 450px;
 }
 
 .menu-title {
-  font-size: 28px;
+  font-size: 2.5em; /* Увеличенный размер */
   margin-bottom: 30px;
-  color: #5a3825;
-  font-weight: 600;
+  color: #5a3825; /* Темно-коричневый */
+  font-weight: 700;
+  border-bottom: 2px solid #a67c52;
+  padding-bottom: 10px;
 }
 
+/* --- Главный список категорий --- */
 .menu-list {
   list-style: none;
   padding: 0;
@@ -30,50 +38,84 @@ body {
 }
 
 .menu-list > li {
-  font-size: 22px;
+  font-size: 1.5em;
   color: #5a3825;
   margin: 15px 0;
+  padding: 10px 0;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
   position: relative;
+  border-bottom: 1px solid #e0e0e0;
+
+  /* Добавляем отступы справа для стрелки */
+  padding-right: 30px;
 }
 
 .menu-list > li:hover {
   color: #a67c52;
+  background-color: #fcf8f6; /* Легкое выделение при наведении */
 }
 
-/* Подкатегории (скрыты по умолчанию) */
-.submenu {
-  display: none;
-  margin-top: 10px;
-  list-style: none;
-  padding: 0;
-  animation: fadeIn 0.3s ease;
-}
-
-.submenu li {
-  font-size: 18px;
-  margin: 8px 0;
-  color: #6b4c32;
-  transition: 0.3s;
-}
-
-.submenu li:hover {
+/* --- Индикатор раскрытия (Стрелка) --- */
+.menu-list > li::after {
+  content: '▼'; /* Иконка стрелки */
+  position: absolute;
+  right: 0;
+  font-size: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  transition: transform 0.3s ease;
   color: #a67c52;
 }
 
-/* Активное состояние */
-.menu-list li.active .submenu {
-  display: block;
+/* --- Подкатегории (Скрыты по умолчанию с плавным эффектом) --- */
+.submenu {
+  list-style: none;
+  /* --- Ключевые стили для плавного скрытия --- */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.6s ease-in-out, opacity 0.4s ease; /* Плавный переход */
+  /* ------------------------------------------- */
+
+  margin-top: 10px;
+  padding: 10px 15px; /* Внутренние отступы подменю */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #a67c52; /* Визуальный акцент */
+  text-align: left; /* Выравнивание контента подменю */
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* --- Элемент списка внутри подменю (Товар) --- */
+.submenu li {
+  font-size: 1.1em;
+  margin: 5px 0;
+  color: #6b4c32;
+  transition: color 0.3s;
+
+  /* Flexbox для выравнивания Названия и Цены */
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dotted #e0d9d3;
+}
+
+.submenu li:last-child {
+  border-bottom: none;
+}
+
+/* --- Стиль для Цены --- */
+.cost {
+  font-weight: 700;
+  color: #a67c52; /* Кофейный цвет цены */
+}
+
+/* --- Активное состояние (Показывает подменю и поворачивает стрелку) --- */
+.menu-list li.active .submenu {
+  max-height: 800px; /* Достаточно большое значение для раскрытия */
+  opacity: 1;
+}
+
+.menu-list li.active::after {
+  transform: translateY(-50%) rotate(180deg);
 }
