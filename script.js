@@ -50,7 +50,7 @@
                 
                 <h3>${item.name}</h3>
                 
-                <div class="cost">${item.cost} руб.</div>
+                <div class="cost">${item.cost} soms.</div>
             `;
         // ----------------------------------------
 
