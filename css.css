@@ -112,10 +112,62 @@ body {
 
 /* --- Активное состояние (Показывает подменю и поворачивает стрелку) --- */
 .menu-list li.active .submenu {
-  max-height: 800px; /* Достаточно большое значение для раскрытия */
+  max-height: 2000px; /* Достаточно большое значение для раскрытия */
   opacity: 1;
 }
 
 .menu-list li.active::after {
   transform: translateY(-50%) rotate(180deg);
+}
+/* --- Общие стили для li в подменю --- */
+.submenu li {
+  font-size: 1.1em;
+  /* margin: 5px 0; <-- этот margin будет конфликтовать с margin-bottom у .product-item-content */
+  color: #6b4c32;
+  transition: color 0.3s;
+  /* Убираем display: flex и justify-content отсюда, т.к. flexbox будет на .product-item-content */
+  display: block; /* li должен быть блочным элементом */
+  padding: 0; /* Уберем padding, чтобы внутренний div мог его контролировать */
+  border-bottom: none; /* Уберем border-bottom отсюда */
+}
+
+/* --- Стили для обертки каждого продукта --- */
+.product-item-content {
+  display: flex; /* Используем flexbox для внутреннего содержимого */
+  flex-direction: column; /* Элементы располагаются друг под другом */
+  align-items: center; /* Центрируем содержимое по горизонтали */
+  padding: 15px; /* Внутренний отступ для карточки продукта */
+  background-color: #ffffff; /* Белый фон для карточки */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Легкая тень для каждой карточки */
+  margin-bottom: 20px; /* Отступ между отдельными позициями меню */
+}
+
+.submenu li:last-child .product-item-content {
+  margin-bottom: 0; /* Убираем отступ у последнего элемента в категории */
+}
+
+/* --- Стилизация изображения --- */
+.product-image {
+  width: 150px; /* Фиксированная ширина изображения */
+  height: 150px; /* Фиксированная высота для квадратных изображений */
+  object-fit: cover; /* Изображение будет обрезаться, чтобы заполнить область */
+  border-radius: 8px; /* Скругленные углы у изображения */
+  margin-bottom: 15px; /* Отступ под изображением */
+}
+
+/* --- Стилизация названия продукта --- */
+.product-name {
+  font-size: 1.3em; /* Чуть крупнее название */
+  font-weight: 600;
+  color: #5a3825;
+  margin-bottom: 8px; /* Отступ между названием и ценой */
+}
+
+/* --- Стилизация цены --- */
+.product-cost { /* Заменил на product-cost, чтобы избежать конфликта */
+  font-weight: 700;
+  color: #a67c52;
+  font-size: 1.2em;
+  margin-top: 5px; /* Отступ над ценой (если нужно) */
 }

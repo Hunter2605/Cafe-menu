@@ -21,6 +21,9 @@
   const BASE_URL = 'http://localhost:3000';
 
   // Универсальная функция загрузки
+  // ... (остальной код script.js) ...
+
+  // Универсальная функция загрузки
   async function loadCategory(endpoint, containerId) {
     const container = document.getElementById(containerId);
 
@@ -33,28 +36,32 @@
 
       container.innerHTML = '';
 
+      console.log('Данные с сервера:', items);
+
       if (items.length === 0) {
         container.innerHTML = '<p>В этой категории пока пусто.</p>';
         return;
       }
 
       items.forEach(item => {
-        const card = document.createElement('div');
-        card.classList.add('card');
+        // Создаем элемент списка для каждого продукта
+        const listItem = document.createElement('li'); // <--- ВАЖНО: создаем <li>
 
-        // --- ОБНОВЛЕННЫЙ HTML-КОД КАРТОЧКИ ---
-        card.innerHTML = `
+        // Создаем внутренний контейнер для содержимого продукта
+        const productContent = document.createElement('div');
+        productContent.classList.add('product-item-content'); // Добавим класс для стилизации
+
+        // --- ОБНОВЛЕННЫЙ HTML-КОД ВНУТРИ productContent ---
+        productContent.innerHTML = `
                 <img src="${item.image_path}" 
                      alt="${item.name}" 
                      class="product-image">
                 
-                <h3>${item.name}</h3>
-                
-                <div class="cost">${item.cost} soms.</div>
-            `;
+                <h4 class="product-name">${item.name}</h4> <div class="product-cost">${item.cost} soms.</div> `;
         // ----------------------------------------
 
-        container.appendChild(card);
+        listItem.appendChild(productContent); // Вставляем контент в <li>
+        container.appendChild(listItem);      // Вставляем <li> в <ul> (.submenu)
       });
 
     } catch (error) {
