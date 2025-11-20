@@ -18,7 +18,16 @@
 </head>
 <body>
 
+<script>
+  if (localStorage.getItem("admin") !== "true") {
+    window.location.href = "login.html";
+  }
+</script>
+
 <h1>Админ-панель Кафе</h1>
+
+<button onclick="logout()">Выйти</button>
+
 <a href="index.html">Вернуться в меню</a>
 
 <div class="add-form">
@@ -51,5 +60,12 @@
 <div id="adm-desserts"></div>
 
 <script src="admin.js"></script>
+
+<script>
+  function logout() {
+    localStorage.removeItem("admin");
+    window.location.href = "login.html";
+  }
+</script>
 </body>
 </html>
