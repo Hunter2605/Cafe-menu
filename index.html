@@ -2,32 +2,36 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title> Menu </title>
+  <title>Menu</title>
   <link rel="stylesheet" href="css.css">
 </head>
 <body>
+
+<button id="langToggle" class="lang-btn">RU</button>
+
 <div class="menu">
-  <div class="menu-title"> Coffee Menu </div>
+  <div class="menu-title" data-lang="menu_title">Меню</div>
+
   <ul class="menu-list">
 
-    <li>Coffee
-      <ul class="submenu" id="coffee">
-      </ul>
+    <li>
+      <span data-lang="coffee_cat">Кофе</span>
+      <ul class="submenu" id="coffee"></ul>
     </li>
 
-    <li>Tea
-      <ul class="submenu" id="tea">
-
-      </ul>
+    <li>
+      <span data-lang="tea_cat">Чай</span>
+      <ul class="submenu" id="tea"></ul>
     </li>
 
-    <li>Desserts
-      <ul class="submenu" id="desserts">
-      </ul>
+    <li>
+      <span data-lang="desserts_cat">Десерты</span>
+      <ul class="submenu" id="desserts"></ul>
     </li>
 
   </ul>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>

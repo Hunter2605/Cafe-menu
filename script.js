@@ -1,5 +1,41 @@
+// ======== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ======= //
 
-  const items = document.querySelectorAll('.menu-list > li');
+const translations = {
+  ru: {
+    menu_title: "Меню",
+    coffee_cat: "Кофе",
+    tea_cat: "Чай",
+    desserts_cat: "Десерты"
+  },
+  en: {
+    menu_title: "Coffee Menu",
+    coffee_cat: "Coffee",
+    tea_cat: "Tea",
+    desserts_cat: "Desserts"
+  }
+};
+
+let currentLang = localStorage.getItem("lang") || "ru";
+
+function updateLanguage() {
+  document.querySelectorAll("[data-lang]").forEach(el => {
+    const key = el.getAttribute("data-lang");
+    el.textContent = translations[currentLang][key];
+  });
+
+  document.getElementById("langToggle").textContent = currentLang.toUpperCase();
+  localStorage.setItem("lang", currentLang);
+}
+
+document.getElementById("langToggle").addEventListener("click", () => {
+  currentLang = currentLang === "ru" ? "en" : "ru";
+  updateLanguage();
+});
+
+document.addEventListener("DOMContentLoaded", updateLanguage);
+// язык
+
+const items = document.querySelectorAll('.menu-list > li');
 
   items.forEach(item => {
   item.addEventListener('click', (e) => {
@@ -66,7 +102,7 @@
 
     } catch (error) {
       console.error(error);
-      container.innerHTML = `<p style="color:red">Ошибка загрузки данных.</p>`;
+      container.innerHTML = `<p style="color:red">Хан лошпекус</p>`;
     }
   }
 
