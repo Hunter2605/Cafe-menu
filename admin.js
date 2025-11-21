@@ -1,21 +1,16 @@
 const BASE_URL = 'http://localhost:3000';
-
-// 1. Обработка отправки формы (ДОБАВЛЕНИЕ)
 document.getElementById('addForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Чтобы страница не перезагружалась
-
-    const formData = new FormData(e.target); // Автоматически собирает все поля и файл
-
+    e.preventDefault();
+    const formData = new FormData(e.target);
     try {
         const response = await fetch(`${BASE_URL}/add-product`, {
             method: 'POST',
-            body: formData // Отправляем как FormData (не JSON!)
+            body: formData
         });
-
         if (response.ok) {
             alert('Товар успешно добавлен!');
-            e.target.reset(); // Очистить форму
-            loadAll(); // Обновить списки внизу
+            e.target.reset();
+            loadAll();
         } else {
             alert('Ошибка при добавлении');
         }
@@ -24,18 +19,12 @@ document.getElementById('addForm').addEventListener('submit', async (e) => {
         alert('Ошибка сервера');
     }
 });
-
-// 2. Загрузка списков для удаления
 async function loadAdminCategory(category, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = 'Загрузка...';
-
     try {
-        // Обратите внимание: для API пути /tea, /coffee, /desserts
-        // Но для удаления мы будем использовать имена категорий: tea, coffee, desserts
         const response = await fetch(`${BASE_URL}/${category === 'coffee' ? 'coffee' : category}`);
         const items = await response.json();
-
         container.innerHTML = '';
         items.forEach(item => {
             const div = document.createElement('div');
@@ -50,19 +39,15 @@ async function loadAdminCategory(category, containerId) {
         console.error(error);
     }
 }
-
-// 3. Функция удаления
 async function deleteItem(category, id) {
     if (!confirm('Вы уверены, что хотите удалить эту позицию?')) return;
-
     try {
         const response = await fetch(`${BASE_URL}/delete-product/${category}/${id}`, {
             method: 'DELETE'
         });
-
         if (response.ok) {
             alert('Удалено!');
-            loadAll(); // Обновить список
+            loadAll();
         } else {
             alert('Ошибка удаления');
         }
@@ -70,13 +55,9 @@ async function deleteItem(category, id) {
         console.error(error);
     }
 }
-
-// Функция для обновления всех списков
 function loadAll() {
     loadAdminCategory('tea', 'adm-tea');
     loadAdminCategory('coffee', 'adm-coffee');
     loadAdminCategory('desserts', 'adm-desserts');
 }
-
-// Запускаем при старте
 loadAll();
