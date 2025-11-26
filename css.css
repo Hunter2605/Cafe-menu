@@ -171,3 +171,28 @@ body {
   font-size: 1.2em;
   margin-top: 5px; /* Отступ над ценой (если нужно) */
 }
+.lang-btn {
+  /* Основное оформление */
+  padding: 10px 20px;
+  background-color: #a67c52; /* Ваш акцентный цвет (как в кнопках входа) */
+  color: white;
+  border: none;
+  border-radius: 50px; /* Сильно закругленные углы */
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.lang-btn:hover {
+  /* Эффект при наведении */
+  background-color: #8c6642; /* Немного темнее */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.lang-btn:active {
+  /* Эффект при клике */
+  background-color: #6d5035;
+  transform: translateY(2px);
+}

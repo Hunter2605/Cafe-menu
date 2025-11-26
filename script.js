@@ -1,5 +1,7 @@
 // ======== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА ======= //
-
+if (!localStorage.getItem('userName')) {
+  window.location.href = 'login.html';
+}
 const translations = {
   ru: {
     menu_title: "Меню",
@@ -102,7 +104,7 @@ const items = document.querySelectorAll('.menu-list > li');
 
     } catch (error) {
       console.error(error);
-      container.innerHTML = `<p style="color:red">Хан лошпекус</p>`;
+      container.innerHTML = `<p style="color:red">Error</p>`;
     }
   }
 

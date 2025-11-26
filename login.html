@@ -2,34 +2,115 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Вход в админку</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в Кафе</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; }
-        button { width: 100%; padding: 10px; background: #333; color: white; border: none; cursor: pointer; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f7f3ef;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h2 { color: #5a3825; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box; /* Важно, чтобы padding не ломал ширину */
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #a67c52;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #8c6642; }
     </style>
 </head>
 <body>
 
-<h2>Вход в админ-панель</h2>
+<div class="login-card">
+    <h2>Добро пожаловать</h2>
+    <p>Введите ваше имя для входа</p>
 
-<input id="password" type="password" placeholder="Введите пароль">
-
-<button onclick="login()">Войти</button>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Ваше имя..." required autocomplete="off">
+        <button type="submit">Войти</button>
+    </form>
+</div>
 
 <script>
-    function login() {
-        const pass = document.getElementById("password").value;
+    const BASE_URL = 'http://localhost:3000';
 
-        // ❗ ПАРОЛЬ — МЕНЯЕШЬ НА СВОЙ
-        if (pass === "hanloh") {
-            localStorage.setItem("admin", "true");
-            window.location.href = "admin.html";
-        } else {
-            alert("Неверный пароль!");
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('username').value.trim();
+        if (!name) return;
+
+        try {
+            const response = await fetch(`${BASE_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                const role = result.role; // Сохраняем роль в удобную переменную
+                const redirectUrl = role === 'admin' ? 'admin.html' : 'index.html'; // Выбираем путь
+
+                // 1. Сохраняем данные
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('userName', name);
+
+                // 2. Диагностика (будет видно, что сохранено)
+                console.log('Сервер ответил:', result);
+                console.log('В хранилище сохранена роль:', role);
+
+                alert(result.message); // Приветствие от сервера
+
+                // --- НОВАЯ ЛОГИКА ПЕРЕНАПРАВЛЕНИЯ ---
+                if (role === 'admin') {
+                    // Только для админа спрашиваем подтверждение
+                    if (confirm(`Вы вошли как ${name} (Админ). Перейти в панель управления?`)) {
+                        window.location.href = redirectUrl;
+                    }
+                    // Если админ нажмет "Отмена", он останется на странице входа.
+                } else {
+                    // Клиента перенаправляем сразу
+                    window.location.href = redirectUrl; // Перейдет на 'index.html'
+                }
+                // ------------------------------------
+            }
+             else {
+                alert('Ошибка входа');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Сервер не отвечает');
         }
-    }
+    });
 </script>
-
 </body>
 </html>
