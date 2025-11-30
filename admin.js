@@ -1,6 +1,5 @@
-// --- 1. АБСОЛЮТНАЯ ЗАЩИТА СТРАНИЦЫ ---
-const userRole = localStorage.getItem('userRole');
-if (userRole !== 'admin') {
+// --- Защита страницы ---
+if (localStorage.getItem('userRole') !== 'admin') {
     window.location.href = 'login.html';
 }
 
@@ -10,185 +9,234 @@ function handleLogout() {
     window.location.href = 'login.html';
 }
 
-// --- 2. ОСНОВНАЯ ЛОГИКА ---
-document.addEventListener('DOMContentLoaded', () => {
-    const BASE_URL = 'http://localhost:3000';
+document.addEventListener("DOMContentLoaded", () => {
 
-    const logoutButton = document.getElementById('logoutBtn');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleLogout();
-        });
-    }
+    const BASE_URL = "http://localhost:3000";
 
-    // --- ОБНОВЛЕНИЕ ВЫПАДАЮЩЕГО СПИСКА ---
-    async function updateCategoryDropdown() {
-        const select = document.getElementById('productCategory');
-        if (!select) return;
+// -----------------------------------------
+// ВЫХОД
+// -----------------------------------------
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) logoutBtn.onclick = handleLogout;
 
+
+// ----------------------------------------------------------------------------
+// 1. ЗАГРУЗКА СПИСКА КАТЕГОРИЙ ДЛЯ SELECT И СПИСКА УДАЛЕНИЯ
+// ----------------------------------------------------------------------------
+    async function loadCategories() {
         try {
-            const response = await fetch(`${BASE_URL}/categories`);
-            const categories = await response.json();
+            const res = await fetch(`${BASE_URL}/categories`);
+            const cats = await res.json();
 
-            select.innerHTML = '';
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat.name;
-                option.textContent = cat.name.charAt(0).toUpperCase() + cat.name.slice(1); // Делаем первую букву заглавной
-                select.appendChild(option);
+            // обновляем select
+            const select = document.getElementById("productCategory");
+            select.innerHTML = "";
+            cats.forEach(cat => {
+                const op = document.createElement("option");
+                op.value = cat.name;
+                op.textContent = `${cat.name}`;
+                select.appendChild(op);
             });
-        } catch (error) {
-            console.error("Не удалось загрузить список категорий:", error);
+
+            // обновляем список категорий для удаления
+            renderCategoryList(cats);
+
+        } catch (err) {
+            console.error("Ошибка загрузки категорий:", err);
         }
     }
 
-    // --- ДОБАВЛЕНИЕ КАТЕГОРИИ ---
-    const catForm = document.getElementById('addCategoryForm');
-    if (catForm) {
-        catForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const categoryName = catForm.categoryName.value.trim();
+    function renderCategoryList(cats) {
+        const list = document.getElementById("category-list");
+        list.innerHTML = "";
 
-            try {
-                const response = await fetch(`${BASE_URL}/add-category`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ categoryName: categoryName })
-                });
+        cats.forEach(cat => {
+            const div = document.createElement("div");
+            div.className = "admin-card";
 
-                const result = await response.json();
+            div.innerHTML = `
+            <span>${cat.name_ru || cat.name} (${cat.name_en || ""})</span>
+            <button class="cat-delete" onclick="deleteCategory('${cat.name}')">Удалить</button>
+        `;
 
-                if (response.ok) {
-                    alert(result.message);
-                    catForm.reset();
-                    loadAllDynamically(); // Перезагружаем список товаров и категорий
-                    updateCategoryDropdown(); // Обновляем селект
-                } else {
-                    alert(`Ошибка: ${result.message}`);
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Ошибка сервера');
-            }
+            list.appendChild(div);
         });
     }
 
-    // --- ДОБАВЛЕНИЕ ТОВАРА ---
-    const prodForm = document.getElementById('addForm');
-    if (prodForm) {
-        prodForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
+// ----------------------------------------------------------------------------
+// 2. СОЗДАНИЕ КАТЕГОРИИ
+// ----------------------------------------------------------------------------
+    document.getElementById("addCategoryForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-            try {
-                const response = await fetch(`${BASE_URL}/add-product`, {
-                    method: 'POST',
-                    body: formData
-                });
-                if (response.ok) {
-                    alert('Товар успешно добавлен!');
-                    prodForm.reset();
-                    loadAllDynamically();
-                } else {
-                    alert('Ошибка при добавлении');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Ошибка сервера');
-            }
-        });
-    }
+        const fd = new FormData(e.target);
 
-    // --- ЗАГРУЗКА ОДНОЙ КАТЕГОРИИ ---
-    async function loadAdminCategory(category, container) {
-        container.innerHTML = 'Загрузка...';
+        const name = fd.get("name").trim();
+        const name_ru = fd.get("name_ru").trim();
+        const name_en = fd.get("name_en").trim();
+
+        if (!name || !name_ru || !name_en) {
+            alert("Заполните все поля!");
+            return;
+        }
+
+        const body = { name, name_ru, name_en };
+
         try {
-            // Обратите внимание: маршрут изменен на /api/products/
-            const response = await fetch(`${BASE_URL}/api/products/${category}`);
-            const items = await response.json();
+            const res = await fetch(`${BASE_URL}/add-category`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
 
-            container.innerHTML = '';
-            if (items.length === 0) {
-                container.innerHTML = '<p style="color:gray">Нет товаров</p>';
+            const data = await res.json();
+            alert(data.message);
+
+            if (res.ok) {
+                e.target.reset();
+                loadCategories();
+                loadAllProducts();
+            }
+        } catch (err) {
+            console.error("Ошибка добавления категории:", err);
+            alert("Ошибка сервера");
+        }
+    });
+
+// ----------------------------------------------------------------------------
+// 3. ДОБАВЛЕНИЕ ТОВАРА
+// ----------------------------------------------------------------------------
+    document.getElementById("addForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+
+        try {
+            const res = await fetch(`${BASE_URL}/add-product`, {
+                method: "POST",
+                body: fd
+            });
+
+            const data = await res.json();
+
+            alert(data.message);
+
+            if (res.ok) {
+                e.target.reset();
+                loadAllProducts();
+            }
+
+        } catch (err) {
+            console.error("Ошибка добавления товара:", err);
+            alert("Ошибка сервера");
+        }
+    });
+
+// ----------------------------------------------------------------------------
+// 4. ЗАГРУЗКА ТОВАРОВ ДЛЯ КАЖДОЙ КАТЕГОРИИ
+// ----------------------------------------------------------------------------
+    async function loadProductsOfCategory(catName, container) {
+        container.innerHTML = "Загрузка...";
+
+        try {
+            const res = await fetch(`${BASE_URL}/api/products/${catName}`);
+            const items = await res.json();
+
+            container.innerHTML = "";
+
+            if (!items.length) {
+                container.innerHTML = "<p style='color:gray'>Нет товаров</p>";
                 return;
             }
 
             items.forEach(item => {
-                const div = document.createElement('div');
-                div.classList.add('admin-card');
+                const div = document.createElement("div");
+                div.className = "admin-card";
+
                 div.innerHTML = `
-                    <span><b>${item.name}</b> - ${item.cost} сом.</span>
-                    <button class="delete-btn" onclick="deleteItem('${category}', ${item.id})">Удалить</button>
-                `;
+                <div>
+                    <b>${item.name_ru || ''}</b> / ${item.name_en || ''}  
+                    — ${item.cost} сом
+                    <div style="font-size:12px;color:#777;">
+                        ${item.comp_ru ? "RU: " + item.comp_ru : ""}
+                        ${item.comp_en ? "<br>EN: " + item.comp_en : ""}
+                    </div>
+                </div>
+
+                <button class="delete-btn"
+                    onclick="deleteItem('${catName}', ${item.id})">Удалить</button>
+            `;
+
                 container.appendChild(div);
             });
-        } catch (error) {
-            console.error('Ошибка при загрузке категории:', error);
-            container.innerHTML = 'Ошибка загрузки данных.';
+
+        } catch (err) {
+            console.error("Ошибка загрузки товаров:", err);
+            container.innerHTML = "Ошибка загрузки!";
         }
     }
 
-    // --- ДИНАМИЧЕСКАЯ ЗАГРУЗКА ВСЕГО ---
-    async function loadAllDynamically() {
+// ----------------------------------------------------------------------------
+// 5. ПОЛНАЯ ЗАГРУЗКА ВСЕХ КАТЕГОРИЙ + ТОВАРОВ
+// ----------------------------------------------------------------------------
+    async function loadAllProducts() {
         try {
-            const response = await fetch(`${BASE_URL}/categories`);
-            const categories = await response.json();
+            const res = await fetch(`${BASE_URL}/categories`);
+            const cats = await res.json();
 
-            // Ищем главный контейнер, куда будем складывать списки
-            // ВАЖНО: В admin.html добавьте <div id="dynamic-lists"></div>
-            let mainContainer = document.getElementById('dynamic-lists');
+            const main = document.getElementById("dynamic-lists");
+            main.innerHTML = "";
 
-            // Если главного контейнера нет, используем body (резервный вариант) или ищем существующие ID
-            if (!mainContainer) {
-                // Пытаемся работать по старой схеме (ищем div по ID),
-                // но для новых категорий это не сработает, пока вы не добавите их в HTML вручную.
-                // Поэтому лучше добавить <div id="dynamic-lists"></div> в HTML.
-                console.warn("Добавьте <div id='dynamic-lists'></div> в admin.html для корректной работы!");
-                return;
+            for (const cat of cats) {
+                const h = document.createElement("h3");
+                h.textContent = cat.name_ru || cat.name;
+                main.appendChild(h);
+
+                const block = document.createElement("div");
+                main.appendChild(block);
+
+                await loadProductsOfCategory(cat.name, block);
             }
 
-            mainContainer.innerHTML = ''; // Очищаем всё перед перерисовкой
-
-            for (const cat of categories) {
-                // Создаем заголовок
-                const title = document.createElement('h3');
-                title.textContent = cat.name.charAt(0).toUpperCase() + cat.name.slice(1);
-                mainContainer.appendChild(title);
-
-                // Создаем контейнер для товаров
-                const listDiv = document.createElement('div');
-                listDiv.id = `adm-${cat.name}`;
-                mainContainer.appendChild(listDiv);
-
-                // Загружаем товары в этот контейнер
-                await loadAdminCategory(cat.name, listDiv);
-            }
-
-        } catch (error) {
-            console.error('Ошибка загрузки категорий:', error);
+        } catch (err) {
+            console.error("Ошибка полной загрузки:", err);
         }
     }
 
-    // Глобальная функция удаления
+// ----------------------------------------------------------------------------
+// 6. ГЛОБАЛЬНЫЕ ФУНКЦИИ ДЛЯ УДАЛЕНИЯ
+// ----------------------------------------------------------------------------
     window.deleteItem = async function (category, id) {
-        if (!confirm('Удалить позицию?')) return;
+        if (!confirm("Удалить товар?")) return;
+
         try {
-            const response = await fetch(`${BASE_URL}/delete-product/${category}/${id}`, {
-                method: 'DELETE'
+            await fetch(`${BASE_URL}/delete-product/${category}/${id}`, {
+                method: "DELETE"
             });
-            if (response.ok) {
-                alert('Удалено!');
-                loadAllDynamically();
-            } else {
-                alert('Ошибка удаления');
-            }
-        } catch (error) {
-            console.error(error);
+
+            loadAllProducts();
+
+        } catch (err) {
+            console.error("Ошибка удаления товара:", err);
         }
     }
-//dd
-    // Запуск
-    updateCategoryDropdown();
-    loadAllDynamically();
-});
+
+    window.deleteCategory = async function (name) {
+        if (!confirm("Удалить категорию и все её товары?")) return;
+
+        try {
+            await fetch(`${BASE_URL}/delete-category/${name}`, { method: "DELETE" });
+            loadCategories();
+            loadAllProducts();
+
+        } catch (err) {
+            console.error("Ошибка удаления категории:", err);
+        }
+    }
+
+// ----------------------------------------------------------------------------
+// 7. СТАРТОВАЯ ИНИЦИАЛИЗАЦИЯ
+// ----------------------------------------------------------------------------
+    loadCategories();
+    loadAllProducts();
+
+}); // DOMContentLoaded

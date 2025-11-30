@@ -1,59 +1,134 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Админ-панель</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
-    /* Форма добавления */
-    .add-form { background: #f0f0f0; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-    .add-form input, .add-form select { display: block; width: 100%; margin-bottom: 10px; padding: 8px; }
-    .add-form button { background: #28a745; color: white; border: none; padding: 10px; cursor: pointer; width: 100%; }
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
+    <style>
+        /* ---------------------- */
+        /* MOBILE FIRST ADAPTATION */
+        /* ---------------------- */
 
-    /* Список для удаления */
-    .item-list { border-top: 2px solid #333; margin-top: 20px; }
-    .admin-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding: 10px; }
-    .delete-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;}
-  </style>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: sans-serif;
+            background: #fafafa;
+        }
+
+        /* Контейнер */
+        .add-form {
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        /* Формы */
+        .add-form input,
+        .add-form select,
+        .add-form textarea,
+        .add-form button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        /* Кнопки */
+        button, .delete-btn, .cat-delete {
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Карточки */
+        .admin-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        /* ---------------------- */
+        /* TABLETS */
+        /* ---------------------- */
+        @media (min-width: 600px) {
+            .admin-card {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .add-form input,
+            .add-form select,
+            .add-form textarea,
+            .add-form button {
+                font-size: 15px;
+            }
+        }
+
+        /* ---------------------- */
+        /* DESKTOP */
+        /* ---------------------- */
+        @media (min-width: 900px) {
+            body {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .admin-card {
+                padding: 14px 20px;
+            }
+
+            .add-form {
+                padding: 20px 25px;
+            }
+        }
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<script src="admin.js"></script>
-
 <h1>Админ-панель Кафе</h1>
 
-<button onclick="logout()" id="logoutBtn">Выйти</button>
+<button onclick="handleLogout()" id="logoutBtn">Выйти</button>
 
 <a href="index.html">Вернуться в меню</a>
 
 <div class="add-form">
     <h2>Добавить новую категорию</h2>
     <form id="addCategoryForm">
-      <input type="text" name="categoryName" placeholder="Название категории (лат., напр. snacks)" required>
-      <button type="submit" class="btn-green">Создать категорию</button>
+        <input name="name" placeholder="Название категории (лат.)" required>
+        <input name="name_ru" placeholder="Название категории (рус.)" required>
+        <input name="name_en" placeholder="Название категории (англ.)" required>
+        <button type="submit">Создать категорию</button>
     </form>
+
 
     <hr>
 
     <h2>Добавить новый товар</h2>
     <form id="addForm">
-      <input type="text" name="name" placeholder="Название товара (лат.)" required>
-      <input type="text" name="name_ru" placeholder="Название товара (рус.)">
-      <input type="number" name="cost" placeholder="Цена" required>
-      <select name="category" id="productCategory" required> <option value="tea">Чай</option>
-        <option value="coffee">Кофе</option>
-        <option value="desserts">Десерты</option>
-      </select>
-      <input type="file" name="image" accept="image/*">
-      <button type="submit">Добавить</button>
+        <input type="text" name="name_ru" placeholder="Название товара (рус.)">
+        <input type="text" name="name_en" placeholder="Название товара (англ.)" required>
+        <input type="number" name="cost" placeholder="Цена" required>
+        <select name="category" id="productCategory" required>
+            <option value="tea">Чай</option>
+            <option value="coffee">Кофе</option>
+            <option value="desserts">Десерты</option>
+        </select>
+        <input type="file" name="image" accept="image/*">
+        <textarea name="comp_ru" placeholder="Состав (рус.)"></textarea>
+        <textarea name="comp_en" placeholder="Состав (англ.)"></textarea>
+        <button type="submit">Добавить</button>
     </form>
 </div>
 
-<h2>Управление товарами (Удаление)</h2>
+<h2>Категории (удалить)</h2>
+<div id="category-list"></div>
 
+<h2>Управление товарами (Удаление)</h2>
 <div id="dynamic-lists"></div>
 
-
+<script src="admin.js"></script>
 </body>
 </html>

@@ -169,3 +169,59 @@ body {
   background-color: #6d5035;
   transform: translateY(2px);
 }
+/* Сетка товаров */
+.product-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Названия и описание */
+.product-details h4 {
+  font-size: 18px;
+}
+
+.product-details {
+  font-size: 16px;
+}
+
+/* ---------------------- */
+/* TABLETS */
+/* ---------------------- */
+@media (min-width: 600px) {
+  .product-item-content {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .product-image {
+    width: 160px;
+  }
+}
+
+/* ---------------------- */
+/* DESKTOP */
+/* ---------------------- */
+@media (min-width: 900px) {
+  .product-item-content {
+    gap: 20px;
+  }
+
+  .product-image {
+    width: 200px;
+  }
+
+  .product-details h4 {
+    font-size: 20px;
+  }
+
+  .product-details {
+    font-size: 17px;
+  }
+}

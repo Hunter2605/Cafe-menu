@@ -22,10 +22,11 @@ const translations = {
 
 let currentLang = localStorage.getItem("lang") || "ru";
 
+// --- убираем рекурсию: updateLanguage только обновляет тексты и localStorage
 function updateLanguage() {
   document.querySelectorAll("[data-lang]").forEach(el => {
     const key = el.getAttribute("data-lang");
-    if (translations[currentLang][key]) {
+    if (translations[currentLang] && translations[currentLang][key]) {
       el.textContent = translations[currentLang][key];
     }
   });
@@ -35,23 +36,29 @@ function updateLanguage() {
   localStorage.setItem("lang", currentLang);
 }
 
-document.getElementById("langToggle")?.addEventListener("click", () => {
+// Обработчик переключения языка — теперь отдельно вызывает перезагрузку меню
+document.getElementById("langToggle")?.addEventListener("click", async () => {
   currentLang = currentLang === "ru" ? "en" : "ru";
   updateLanguage();
+  await loadAllCategories(); // перезагружаем меню вручную, без рекурсии
 });
+
 
 // ======== Загрузка категорий и товаров ========
 const BASE_URL = 'http://localhost:3000';
 
+function formatCurrency(amount) {
+  return currentLang === "en" ? `${amount} soms` : `${amount} сом`;
+}
+
+
 async function loadCategory(endpoint, containerId) {
   const container = document.getElementById(containerId);
-
   if (!container) return;
 
   try {
     const response = await fetch(BASE_URL + endpoint);
     if (!response.ok) throw new Error('Ошибка сети');
-
     const items = await response.json();
     container.innerHTML = '';
 
@@ -61,21 +68,29 @@ async function loadCategory(endpoint, containerId) {
     }
 
     items.forEach(item => {
+      // Выбираем название по языку (fallbackы)
+      const nameRu = item.name_ru || item.name;
+      const nameEn = item.name_en || item.name;
+      const compRu = item.comp_ru || item.comp || '';
+      const compEn = item.comp_en || '';
+
+      const displayName = (currentLang === 'en') ? (nameEn || nameRu || item.name) : (nameRu || nameEn || item.name);
+      const displayComp = (currentLang === 'en') ? (compEn || compRu) : (compRu || compEn);
+
       const listItem = document.createElement('li');
       listItem.innerHTML = `
   <div class="product-item-content">
-      <img src="${item.image_path}" 
-           alt="${item.name}" 
+      <img src="${item.image_path || ''}" 
+           alt="${displayName}" 
            class="product-image">
       
       <div class="product-details"> 
-          <h4 class="product-name">${item.name}</h4>
-          <div class="product-comp"><strong>Состав:</strong> ${item.comp}</div>
-          <div class="product-cost">${item.cost} сом.</div>
+          <h4 class="product-name">${displayName}</h4>
+          <div class="product-comp">${displayComp}</div>
+          <div class="product-cost">${formatCurrency(item.cost)}</div>
       </div>
   </div>
 `;
-
       container.appendChild(listItem);
     });
 
@@ -100,7 +115,10 @@ async function loadAllCategories() {
     categories.forEach(cat => {
       const catKey = cat.name.toLowerCase();
       const translationKey = `${catKey}_cat`;
-      const displayTitle = translations[currentLang][translationKey] || cat.name;
+      const displayTitle = currentLang === "en"
+          ? (cat.name_en || cat.name)
+          : (cat.name_ru || cat.name);
+
 
       const listItem = document.createElement('li');
       listItem.innerHTML = `
