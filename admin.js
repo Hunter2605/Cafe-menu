@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
         }
     }
-
+//dd
     // Запуск
     updateCategoryDropdown();
     loadAllDynamically();
