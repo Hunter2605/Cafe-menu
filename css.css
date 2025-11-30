@@ -1,33 +1,33 @@
 /* --- Сброс и общие настройки --- */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f7f3ef; /* Мягкий фон кофейни */
+  background: #f7f3ef;
   margin: 0;
-  min-height: 100vh; /* Используем min-height для лучшего центрирования */
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
+  align-items: flex-start;
+  padding: 40px 20px;
 }
 
 /* --- Основной контейнер меню --- */
 .menu {
   background: #fff;
-  padding: 40px 60px;
+  padding: 30px 40px;
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15); /* Более выраженная тень */
-  text-align: center;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  text-align: left;
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
 }
 
 .menu-title {
-  font-size: 2.5em; /* Увеличенный размер */
-  margin-bottom: 30px;
-  color: #5a3825; /* Темно-коричневый */
+  font-size: 2em;
+  margin-bottom: 25px;
+  color: #5a3825;
   font-weight: 700;
   border-bottom: 2px solid #a67c52;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 
 /* --- Главный список категорий --- */
@@ -38,167 +38,134 @@ body {
 }
 
 .menu-list > li {
-  font-size: 1.5em;
-  color: #5a3825;
-  margin: 15px 0;
-  padding: 10px 0;
-  cursor: pointer;
-  transition: all 0.3s ease;
   position: relative;
   border-bottom: 1px solid #e0e0e0;
-
-  /* Добавляем отступы справа для стрелки */
-  padding-right: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .menu-list > li:hover {
-  color: #a67c52;
-  background-color: #fcf8f6; /* Легкое выделение при наведении */
-}
-
-/* --- Индикатор раскрытия (Стрелка) --- */
-.menu-list > li::after {
-  content: '▼'; /* Иконка стрелки */
-  position: absolute;
-  right: 0;
-  font-size: 14px;
-  top: 50%;
-  transform: translateY(-50%) rotate(0deg);
-  transition: transform 0.3s ease;
+  background-color: #fcf8f6;
   color: #a67c52;
 }
 
-/* --- Подкатегории (Скрыты по умолчанию с плавным эффектом) --- */
-.submenu {
-  list-style: none;
-  /* --- Ключевые стили для плавного скрытия --- */
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.6s ease-in-out, opacity 0.4s ease; /* Плавный переход */
-  /* ------------------------------------------- */
-
-  margin-top: 10px;
-  padding: 10px 15px; /* Внутренние отступы подменю */
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  border-left: 4px solid #a67c52; /* Визуальный акцент */
-  text-align: left; /* Выравнивание контента подменю */
-}
-
-/* --- Элемент списка внутри подменю (Товар) --- */
-.submenu li {
-  font-size: 1.1em;
-  margin: 5px 0;
-  color: #6b4c32;
-  transition: color 0.3s;
-
-  /* Flexbox для выравнивания Названия и Цены */
+/* --- Название категории + стрелка --- */
+.menu-list > li > h3 {
   display: flex;
   justify-content: space-between;
-  padding: 5px 0;
-  border-bottom: 1px dotted #e0d9d3;
+  align-items: center;
+  padding: 12px 15px;
+  margin: 0;
+  font-size: 1.4em;
+  color: #5a3825;
 }
 
-.submenu li:last-child {
-  border-bottom: none;
+/* --- Стрелка раскрытия --- */
+.menu-list > li::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s;
+  color: #a67c52;
 }
 
-/* --- Стиль для Цены --- */
-.cost {
-  font-weight: 700;
-  color: #a67c52; /* Кофейный цвет цены */
-}
-
-/* --- Активное состояние (Показывает подменю и поворачивает стрелку) --- */
-.menu-list li.active .submenu {
-  max-height: 2000px; /* Достаточно большое значение для раскрытия */
-  opacity: 1;
-}
-
+/* --- Активная категория раскрывает подменю и стрелку поворачивает --- */
 .menu-list li.active::after {
   transform: translateY(-50%) rotate(180deg);
 }
-/* --- Общие стили для li в подменю --- */
-/* Перезаписываем нейтральный стиль для LI, чтобы не конфликтовать */
-.submenu li {
-  font-size: 1.1em;
-  padding: 0;
-  margin: 0;
+
+/* --- Подменю (список товаров) --- */
+.submenu {
   list-style: none;
-  border-bottom: none;
-}
-/* --- Стили для обертки каждого продукта --- */
-.product-item-content {
-  display: flex; /* Используем flexbox для внутреннего содержимого */
-  flex-direction: column; /* Элементы располагаются друг под другом */
-  align-items: center; /* Центрируем содержимое по горизонтали */
-  padding: 15px; /* Внутренний отступ для карточки продукта */
-  background-color: #ffffff; /* Белый фон для карточки */
+  padding: 10px 15px;
+  margin: 0;
+  background-color: #f9f9f9;
+  border-left: 4px solid #a67c52;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Легкая тень для каждой карточки */
-  margin-bottom: 20px; /* Отступ между отдельными позициями меню */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.6s ease-in-out, opacity 0.4s ease;
 }
 
-.submenu li:last-child .product-item-content {
-  margin-bottom: 0; /* Убираем отступ у последнего элемента в категории */
+/* --- Показываем подменю при active --- */
+.menu-list li.active .submenu {
+  max-height: 2000px;
+  opacity: 1;
 }
 
-/* --- Стилизация изображения --- */
+/* --- Элемент товара --- */
+.submenu li {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding: 10px 5px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  flex-direction: column;
+}
+
+/* --- Последний элемент без нижнего отступа --- */
+.submenu li:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Изображение продукта --- */
 .product-image {
-  width: 150px; /* Фиксированная ширина изображения */
-  height: 150px; /* Фиксированная высота для квадратных изображений */
-  object-fit: cover; /* Изображение будет обрезаться, чтобы заполнить область */
-  border-radius: 8px; /* Скругленные углы у изображения */
-  margin-bottom: 15px; /* Отступ под изображением */
+  width: 100%;
+  max-width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
-/* --- Стилизация названия продукта --- */
+/* --- Название и состав продукта --- */
 .product-name {
-  font-size: 1.3em; /* Чуть крупнее название */
+  font-size: 1.2em;
   font-weight: 600;
   color: #5a3825;
-  margin-bottom: 8px; /* Отступ между названием и ценой */
+  margin-bottom: 5px;
 }
 
-/* --- Стилизация цены --- */
-.product-cost { /* Заменил на product-cost, чтобы избежать конфликта */
+.product-comp {
+  font-size: 0.95em;
+  color: #6b4c32;
+  margin-bottom: 5px;
+}
+
+/* --- Цена продукта --- */
+.product-cost {
   font-weight: 700;
   color: #a67c52;
-  font-size: 1.2em;
-  margin-top: 5px; /* Отступ над ценой (если нужно) */
+  font-size: 1.1em;
 }
+
+/* --- Кнопка смены языка --- */
 .lang-btn {
-  /* Основное оформление */
-  padding: 10px 20px;
-  background-color: #a67c52; /* Ваш акцентный цвет (как в кнопках входа) */
-  color: white;
+  padding: 8px 20px;
+  background-color: #a67c52;
+  color: #fff;
   border: none;
-  border-radius: 50px; /* Сильно закругленные углы */
-  font-size: 15px;
+  border-radius: 50px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .lang-btn:hover {
-  /* Эффект при наведении */
-  background-color: #8c6642; /* Немного темнее */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  background-color: #8c6642;
+  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
 }
 
 .lang-btn:active {
-  /* Эффект при клике */
   background-color: #6d5035;
   transform: translateY(2px);
 }
-/* --- НОВЫЙ СТИЛЬ ДЛЯ ГРУППЫ НАЗВАНИЕ/ЦЕНА --- */
-.product-details {
-  display: flex; /* Используем flexbox для выравнивания */
-  justify-content: space-between; /* Название слева, Цена справа */
-  align-items: center;
-  width: 100%; /* Занимает всю ширину родителя */
-  margin-bottom: 5px;
-}
-

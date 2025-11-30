@@ -63,14 +63,19 @@ async function loadCategory(endpoint, containerId) {
     items.forEach(item => {
       const listItem = document.createElement('li');
       listItem.innerHTML = `
-        <div class="product-item-content">
-            <img src="${item.image_path}" alt="${item.name}" class="product-image">
-            <div class="product-details"> 
-                <h4 class="product-name">${item.name}</h4>
-                <div class="product-cost">${item.cost} сом.</div>
-            </div>
-        </div>
-      `;
+  <div class="product-item-content">
+      <img src="${item.image_path}" 
+           alt="${item.name}" 
+           class="product-image">
+      
+      <div class="product-details"> 
+          <h4 class="product-name">${item.name}</h4>
+          <div class="product-comp"><strong>Состав:</strong> ${item.comp}</div>
+          <div class="product-cost">${item.cost} сом.</div>
+      </div>
+  </div>
+`;
+
       container.appendChild(listItem);
     });
 
