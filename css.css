@@ -120,17 +120,14 @@ body {
   transform: translateY(-50%) rotate(180deg);
 }
 /* --- Общие стили для li в подменю --- */
+/* Перезаписываем нейтральный стиль для LI, чтобы не конфликтовать */
 .submenu li {
   font-size: 1.1em;
-  /* margin: 5px 0; <-- этот margin будет конфликтовать с margin-bottom у .product-item-content */
-  color: #6b4c32;
-  transition: color 0.3s;
-  /* Убираем display: flex и justify-content отсюда, т.к. flexbox будет на .product-item-content */
-  display: block; /* li должен быть блочным элементом */
-  padding: 0; /* Уберем padding, чтобы внутренний div мог его контролировать */
-  border-bottom: none; /* Уберем border-bottom отсюда */
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-bottom: none;
 }
-
 /* --- Стили для обертки каждого продукта --- */
 .product-item-content {
   display: flex; /* Используем flexbox для внутреннего содержимого */
@@ -196,3 +193,12 @@ body {
   background-color: #6d5035;
   transform: translateY(2px);
 }
+/* --- НОВЫЙ СТИЛЬ ДЛЯ ГРУППЫ НАЗВАНИЕ/ЦЕНА --- */
+.product-details {
+  display: flex; /* Используем flexbox для выравнивания */
+  justify-content: space-between; /* Название слева, Цена справа */
+  align-items: center;
+  width: 100%; /* Занимает всю ширину родителя */
+  margin-bottom: 5px;
+}
+

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Menu</title>
   <link rel="stylesheet" href="css.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -11,25 +12,8 @@
 
 <div class="menu">
   <div class="menu-title" data-lang="menu_title">Меню</div>
-
-  <ul class="menu-list">
-
-    <li>
-      <span data-lang="coffee_cat">Кофе</span>
-      <ul class="submenu" id="coffee"></ul>
-    </li>
-
-    <li>
-      <span data-lang="tea_cat">Чай</span>
-      <ul class="submenu" id="tea"></ul>
-    </li>
-
-    <li>
-      <span data-lang="desserts_cat">Десерты</span>
-      <ul class="submenu" id="desserts"></ul>
-    </li>
-
-  </ul>
+    <ul class="menu-list" id="dynamic-menu-list">
+    </ul>
 </div>
 
 <script src="script.js"></script>

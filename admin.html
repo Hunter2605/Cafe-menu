@@ -15,6 +15,7 @@
     .admin-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding: 10px; }
     .delete-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;}
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -27,33 +28,31 @@
 <a href="index.html">Вернуться в меню</a>
 
 <div class="add-form">
-  <h2>Добавить новый товар</h2>
-  <form id="addForm">
-    <select name="category" id="categorySelect" required>
-      <option value="tea">Чай</option>
-      <option value="coffee">Кофе</option>
-      <option value="desserts">Десерты</option>
-    </select>
+    <h2>Добавить новую категорию</h2>
+    <form id="addCategoryForm">
+      <input type="text" name="categoryName" placeholder="Название категории (лат., напр. snacks)" required>
+      <button type="submit" class="btn-green">Создать категорию</button>
+    </form>
 
-    <input type="text" name="name" placeholder="Название (например: Латте)" required>
-    <input type="number" name="cost" placeholder="Цена (сом)" required>
+    <hr>
 
-    <input type="file" name="image" accept="image/*" required>
-
-    <button type="submit">Добавить в меню</button>
-  </form>
+    <h2>Добавить новый товар</h2>
+    <form id="addForm">
+      <input type="text" name="name" placeholder="Название товара (лат.)" required>
+      <input type="text" name="name_ru" placeholder="Название товара (рус.)">
+      <input type="number" name="cost" placeholder="Цена" required>
+      <select name="category" id="productCategory" required> <option value="tea">Чай</option>
+        <option value="coffee">Кофе</option>
+        <option value="desserts">Десерты</option>
+      </select>
+      <input type="file" name="image" accept="image/*">
+      <button type="submit">Добавить</button>
+    </form>
 </div>
 
 <h2>Управление товарами (Удаление)</h2>
 
-<h3>Чай</h3>
-<div id="adm-tea"></div>
-
-<h3>Кофе</h3>
-<div id="adm-coffee"></div>
-
-<h3>Десерты</h3>
-<div id="adm-desserts"></div>
+<div id="dynamic-lists"></div>
 
 
 </body>
