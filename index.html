@@ -1,19 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Menu</title>
+  <meta charset="utf-8" />
+  <title>Cafe Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="css.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<button id="langToggle" class="lang-btn">RU</button>
+<header class="site-header">
+  <div class="header-left">
+    <button id="langToggle" class="lang-btn">EN</button>
+  </div>
 
-<div class="menu">
-  <div class="menu-title" data-lang="menu_title">Меню</div>
-    <ul class="menu-list" id="dynamic-menu-list">
-    </ul>
+  <div class="promo-banner"></div>
+
+</header>
+
+<main class="site-main">
+  <div class="menu" id="menu">
+    <div class="menu-title" data-lang="menu_title">Coffee Menu</div>
+    <div id="dynamic-menu-list" class="dynamic-menu-list"></div>
+  </div>
+</main>
+
+<div id="wheel-footer" class="wheel-footer collapsed">
+
+  <div class="wheel-handle" id="wheelHandle">
+    🎡 <span data-lang="play">Play</span>
+
+    <div class="footer-bonus">
+      <strong data-lang="label_bonuses">Бонусы:</strong>
+      <span id="bonus-balance-footer">0</span>
+    </div>
+  </div>
+
+  <div class="wheel-body">
+    <div id="wheel" class="wheel-canvas-wrap">
+      <canvas id="wheelCanvas" width="260" height="260"></canvas>
+    </div>
+    <div class="wheel-controls">
+      <button id="spinBtn" class="btn-primary" data-lang="spin">Spin</button>
+      <button id="closeWheelBtn" class="btn-outline" data-lang="close">Close</button>
+    </div>
+    <div id="wheel-msg" class="wheel-msg"></div>
+  </div>
 </div>
 
 <script src="script.js"></script>

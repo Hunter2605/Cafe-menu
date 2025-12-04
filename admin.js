@@ -1,4 +1,3 @@
-// --- Защита страницы ---
 if (localStorage.getItem('userRole') !== 'admin') {
     window.location.href = 'login.html';
 }
@@ -13,16 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const BASE_URL = "http://localhost:3000";
 
-// -----------------------------------------
-// ВЫХОД
-// -----------------------------------------
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) logoutBtn.onclick = handleLogout;
 
-
-// ----------------------------------------------------------------------------
-// 1. ЗАГРУЗКА СПИСКА КАТЕГОРИЙ ДЛЯ SELECT И СПИСКА УДАЛЕНИЯ
-// ----------------------------------------------------------------------------
     async function loadCategories() {
         try {
             const res = await fetch(`${BASE_URL}/categories`);
@@ -63,9 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-// ----------------------------------------------------------------------------
-// 2. СОЗДАНИЕ КАТЕГОРИИ
-// ----------------------------------------------------------------------------
     document.getElementById("addCategoryForm").addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -103,9 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-// ----------------------------------------------------------------------------
-// 3. ДОБАВЛЕНИЕ ТОВАРА
-// ----------------------------------------------------------------------------
     document.getElementById("addForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const fd = new FormData(e.target);
@@ -131,9 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-// ----------------------------------------------------------------------------
-// 4. ЗАГРУЗКА ТОВАРОВ ДЛЯ КАЖДОЙ КАТЕГОРИИ
-// ----------------------------------------------------------------------------
     async function loadProductsOfCategory(catName, container) {
         container.innerHTML = "Загрузка...";
 
@@ -175,9 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// ----------------------------------------------------------------------------
-// 5. ПОЛНАЯ ЗАГРУЗКА ВСЕХ КАТЕГОРИЙ + ТОВАРОВ
-// ----------------------------------------------------------------------------
     async function loadAllProducts() {
         try {
             const res = await fetch(`${BASE_URL}/categories`);
@@ -202,9 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// ----------------------------------------------------------------------------
-// 6. ГЛОБАЛЬНЫЕ ФУНКЦИИ ДЛЯ УДАЛЕНИЯ
-// ----------------------------------------------------------------------------
+
+
     window.deleteItem = async function (category, id) {
         if (!confirm("Удалить товар?")) return;
 
@@ -232,11 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Ошибка удаления категории:", err);
         }
     }
-
-// ----------------------------------------------------------------------------
-// 7. СТАРТОВАЯ ИНИЦИАЛИЗАЦИЯ
-// ----------------------------------------------------------------------------
     loadCategories();
     loadAllProducts();
 
-}); // DOMContentLoaded
+});

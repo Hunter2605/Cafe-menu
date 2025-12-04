@@ -30,7 +30,7 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            box-sizing: border-box; /* Важно, чтобы padding не ломал ширину */
+            box-sizing: border-box;
         }
         button {
             width: 100%;
@@ -78,31 +78,24 @@
             const result = await response.json();
 
             if (response.ok) {
-                const role = result.role; // Сохраняем роль в удобную переменную
-                const redirectUrl = role === 'admin' ? 'admin.html' : 'index.html'; // Выбираем путь
+                const role = result.role;
+                const redirectUrl = role === 'admin' ? 'admin.html' : 'index.html';
 
-                // 1. Сохраняем данные
                 localStorage.setItem('userRole', role);
                 localStorage.setItem('userName', name);
 
-                // 2. Диагностика (будет видно, что сохранено)
                 console.log('Сервер ответил:', result);
                 console.log('В хранилище сохранена роль:', role);
 
-                alert(result.message); // Приветствие от сервера
+                alert(result.message);
 
-                // --- НОВАЯ ЛОГИКА ПЕРЕНАПРАВЛЕНИЯ ---
                 if (role === 'admin') {
-                    // Только для админа спрашиваем подтверждение
                     if (confirm(`Вы вошли как ${name} (Админ). Перейти в панель управления?`)) {
                         window.location.href = redirectUrl;
                     }
-                    // Если админ нажмет "Отмена", он останется на странице входа.
                 } else {
-                    // Клиента перенаправляем сразу
-                    window.location.href = redirectUrl; // Перейдет на 'index.html'
+                    window.location.href = redirectUrl;
                 }
-                // ------------------------------------
             }
              else {
                 alert('Ошибка входа');
